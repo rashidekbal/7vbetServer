@@ -21,11 +21,12 @@ app.post("/register", (req, res) => {
   const phone = req.body.phone;
   const password = req.body.password;
   const referredBy = req.body.refferedBy;
+
   let uid = String(phone).slice(2);
 
   let query = `select * from userdetails where uid=${uid} limit 1`;
   3;
-  let insert = `insert into userdetails values(${uid},${phone},'${password}',${referredBy})`;
+  let insert = `insert into userdetails values(${uid},${phone},'${password}','${referredBy}')`;
   connection.query(query, (erry, result) => {
     if (erry) {
       console.log(erry);
