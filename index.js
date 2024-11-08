@@ -44,7 +44,31 @@ app.post("/register", (req, res) => {
           console.log(err);
         }
       } else {
-        res.send("user_Exists ");
+        res.send("user_Exists");
+      }
+    }
+  });
+});
+
+app.post("/login", (req, res) => {
+  let response;
+  let phone = req.body.phone;
+  let password = req.body.password;
+  const query = `select * from userdetails where phone =${phone}`;
+  connection.query(query, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.send("err");
+    } else {
+      if (result == 0) {
+        res.send("null");
+      } else {
+        response = result[0];
+        if (response.pass !== password) {
+          res.send("passerr");
+        } else {
+          res.send("sucess");
+        }
       }
     }
   });
