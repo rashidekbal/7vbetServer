@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import { connection } from "./db/dbConnect.js";
+import { wingo } from "./WingoResults/wingoresults.js";
 const app = express();
 
 connection.connect((err) => {
@@ -9,6 +10,7 @@ connection.connect((err) => {
     console.log(`error connection to database ${err}`);
   } else {
     console.log("finally connected to database");
+    wingo();
     app.listen(process.env.PORT, () => {
       console.log("server is running on port ", process.env.PORT);
     });
@@ -21,12 +23,12 @@ app.post("/register", (req, res) => {
   const phone = req.body.phone;
   const password = req.body.password;
   const referredBy = req.body.refferedBy;
-
+  const date = new Date();
   let uid = String(phone).slice(2);
 
-  let query = `select * from userdetails where uid=${uid} limit 1`;
+  let query = `select * from userdetails where uid=${phone} limit 1`;
   3;
-  let insert = `insert into userdetails values(${uid},${phone},'${password}','${referredBy}')`;
+  let insert = `insert into userdetails values(${uid},${phone},'${password}','${referredBy}','${date.toLocaleDateString()}','${date.toLocaleTimeString()}')`;
   connection.query(query, (erry, result) => {
     if (erry) {
       console.log(erry);
@@ -72,4 +74,18 @@ app.post("/login", (req, res) => {
       }
     }
   });
+});
+
+app.get("/wingoOneMin", (req, res) => {
+  connection.query(
+    "select * from wingo1min   order by period desc limit 10",
+
+    (err, response) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(response);
+      }
+    }
+  );
 });
