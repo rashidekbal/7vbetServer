@@ -32,6 +32,7 @@ app.post("/register", (req, res) => {
   connection.query(query, (erry, result) => {
     if (erry) {
       console.log(erry);
+      res.send("err");
     } else {
       if (result == 0) {
         try {
@@ -39,7 +40,14 @@ app.post("/register", (req, res) => {
             if (err) {
               res.send(err);
             } else {
-              res.send("ok");
+              let q1 = `insert into userfinances values('${uid}','${uid}',${"0.0"},${0},${0})`;
+              connection.query(q1, (err, result) => {
+                if (!err) {
+                  res.send("ok");
+                } else {
+                  res.send("ok");
+                }
+              });
             }
           });
         } catch (error) {
@@ -88,4 +96,20 @@ app.get("/wingoOneMin", (req, res) => {
       }
     }
   );
+});
+
+app.post("/userfinances", (req, res) => {
+  let query = `select * from userfinances where uid=${req.body.uid}`;
+
+  connection.query(query, (err, result) => {
+    if (!err) {
+      if (!result == 0) {
+        res.send(result[0]);
+      } else {
+        res.send("Exception_Details_Not_Found");
+      }
+    } else {
+      res.send("err");
+    }
+  });
 });
