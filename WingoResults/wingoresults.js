@@ -1,4 +1,5 @@
 import { connection } from "../db/dbConnect.js";
+import { settle1MinWingo } from "./betResultCalcWingo.js";
 
 //note :- every game result will be published thorugh wingo page
 const wingo = () => {
@@ -8,6 +9,11 @@ const wingo = () => {
     //for one minute games
     if (date.getSeconds() == 55) {
       WingoOneMinResult();
+    }
+
+    if (date.getSeconds() == 58) {
+      console.log(`current sec ${date.getSeconds()}`);
+      settle1MinWingo();
     }
 
     //for
@@ -25,7 +31,7 @@ function WingoOneMinResult() {
   let min = date.getMinutes() + 1;
   // generate new random int between 0 and 9
   let period = `${year}${month}${day}${hour == 0 ? `00` : hour}${
-    min == 0 ? `60` : min
+    min == 0 ? `60` : min < 10 ? "0" + min : min
   }`;
   let number = Math.floor(Math.random() * 10);
   let size;
@@ -67,7 +73,7 @@ function WingoFiveMinResult() {
   let min = date.getMinutes() + 1;
   // generate new random int between 0 and 9
   let period = `${year}${month}${day}${hour == 0 ? `00` : hour}${
-    min == 0 ? `60` : min
+    min == 0 ? `60` : min < 10 && "0" + min
   }`;
   let number = Math.floor(Math.random() * 10);
   let size;

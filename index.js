@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import "dotenv/config";
 import cors from "cors";
 import { connection } from "./db/dbConnect.js";
@@ -109,7 +109,55 @@ app.post("/userfinances", (req, res) => {
         res.send("Exception_Details_Not_Found");
       }
     } else {
-      res.send("err");
+      res.send("err" + err);
     }
   });
+});
+
+app.post("/setWingo1MinBet", (req, res) => {
+  let uid = req.body.packet.uid;
+  let period = req.body.packet.period;
+  let choice = req.body.packet.selection;
+  let initialAmount = Number(req.body.packet.amount);
+  let amount = initialAmount - initialAmount / 25;
+
+  let x = new Date();
+  let sec = x.getSeconds();
+  if (sec > 55) {
+    res.send("time up for current round");
+  } else {
+    let q = `select balance from userfinances where uid='${uid}'`;
+    connection.query(q, (err, result2) => {
+      if (!err) {
+        let userbalance = Number(result2[0].balance);
+        if (userbalance < amount) {
+          res.send("bet not placed balance insufficient");
+        } else {
+          let q3 = `update userfinances set balance='${
+            userbalance - initialAmount
+          }' where uid='${uid}'`;
+          connection.query(q3, (error, response) => {
+            if (!err) {
+              try {
+                let query = `INSERT INTO general1minbet (uid, period, choice, amount) VALUES ('${uid}', '    ${period}', '${choice}', '${amount}');`;
+                connection.query(query, (err, result) => {
+                  if (!err) {
+                    res.send("done");
+                  } else {
+                    res.send(err);
+                  }
+                });
+              } catch (error) {
+                res.send("err");
+              }
+            } else {
+              res.send("err occured while deducting from user balance");
+            }
+          });
+        }
+      } else {
+        res.send("err bet not set something went wrong");
+      }
+    });
+  }
 });
