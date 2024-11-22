@@ -2,13 +2,29 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import { Server } from "socket.io";
-import http from "http";
 import { connection } from "./db/dbConnect.js";
 import { wingo } from "./WingoResults/wingoresults.js";
 import { settle1MinWingo } from "./WingoResults/betResultCalcWingo.js";
+import http from "http";
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: { origin: "*" },
+  transports: ["websocket", "polling"],
+});
+io.on("connection", (socket) => {
+  setInterval(() => {
+    let x = new Date();
+    let data = { minute: x.getMinutes(), seconds: x.getSeconds() };
+    socket.emit("message", data);
+  }, 1000);
+  socket.on("message", (message) => {
+    console.log(message);
+  });
 
+  socket.on("disconnect", () => {});
+});
 connection.connect((err) => {
   if (err) {
     console.log(`Error connecting to database: ${err}`);
@@ -17,7 +33,7 @@ connection.connect((err) => {
     wingo();
 
     const PORT = process.env.PORT || 8000;
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log("Server is running on port", PORT);
     });
   }
@@ -25,6 +41,7 @@ connection.connect((err) => {
 
 app.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"] }));
 app.use(express.json());
+
 app.get("/", (req, res) => {
   res.send("you got it right");
 });
