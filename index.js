@@ -205,7 +205,9 @@ app.post("/setWingo1minbet", (req, res) => {
           connection.query(q3, (error, response) => {
             if (!err) {
               try {
-                let query = `INSERT INTO userbethistory ( uid,game,timeperiod, period, choice, amount,status) VALUES ('${uid}','${game}' ,'${time}','   ${period}', '${choice}', '${amount}',"pending");`;
+                let query = `INSERT INTO userbethistory ( uid,game,timeperiod, period, choice, amount,status,BetTime,	wlAmount) VALUES ('${uid}','${game}' ,'${time}','   ${period}', '${choice}', '${amount}',"pending",'${
+                  x.toLocaleDateString() + " " + x.toLocaleTimeString()
+                }',${0});`;
                 connection.query(query, (err, result) => {
                   if (!err) {
                     res.send("done");
@@ -254,7 +256,9 @@ app.post("/setWingo3minbet", (req, res) => {
             connection.query(q3, (error, response) => {
               if (!err) {
                 try {
-                  let query = `INSERT INTO userbethistory ( uid,game,timeperiod, period, choice, amount,status) VALUES ('${uid}','${game}' ,'${time}','   ${period}', '${choice}', '${amount}',"pending");`;
+                  let query = `INSERT INTO userbethistory ( uid,game,timeperiod, period, choice, amount,status,BetTime,	wlAmount) VALUES ('${uid}','${game}' ,'${time}','   ${period}', '${choice}', '${amount}',"pending",'${
+                    x.toLocaleDateString() + " " + x.toLocaleTimeString()
+                  }',${0});`;
                   connection.query(query, (err, result) => {
                     if (!err) {
                       res.send("done");
@@ -289,7 +293,9 @@ app.post("/setWingo3minbet", (req, res) => {
           connection.query(q3, (error, response) => {
             if (!err) {
               try {
-                let query = `INSERT INTO userbethistory ( uid,game,timeperiod, period, choice, amount,status) VALUES ('${uid}','${game}' ,'${time}','   ${period}', '${choice}', '${amount}',"pending");`;
+                let query = `INSERT INTO userbethistory ( uid,game,timeperiod, period, choice, amount,status,BetTime,	wlAmount) VALUES ('${uid}','${game}' ,'${time}','   ${period}', '${choice}', '${amount}',"pending",'${
+                  x.toLocaleDateString() + " " + x.toLocaleTimeString()
+                }',${0});`;
                 connection.query(query, (err, result) => {
                   if (!err) {
                     res.send("done");
@@ -338,7 +344,9 @@ app.post("/setwingo5min", (req, res) => {
             connection.query(q3, (error, response) => {
               if (!err) {
                 try {
-                  let query = `INSERT INTO userbethistory ( uid,game,timeperiod, period, choice, amount,status) VALUES ('${uid}','${game}' ,'${time}','   ${period}', '${choice}', '${amount}',"pending");`;
+                  let query = `INSERT INTO userbethistory ( uid,game,timeperiod, period, choice, amount,status,BetTime,	wlAmount) VALUES ('${uid}','${game}' ,'${time}','   ${period}', '${choice}', '${amount}',"pending",'${
+                    x.toLocaleDateString() + " " + x.toLocaleTimeString()
+                  }',${0});`;
                   connection.query(query, (err, result) => {
                     if (!err) {
                       res.send("done");
@@ -373,7 +381,9 @@ app.post("/setwingo5min", (req, res) => {
           connection.query(q3, (error, response) => {
             if (!err) {
               try {
-                let query = `INSERT INTO userbethistory ( uid,game,timeperiod, period, choice, amount,status) VALUES ('${uid}','${game}' ,'${time}','   ${period}', '${choice}', '${amount}',"pending");`;
+                let query = `INSERT INTO userbethistory ( uid,game,timeperiod, period, choice, amount,status,BetTime,	wlAmount) VALUES ('${uid}','${game}' ,'${time}','   ${period}', '${choice}', '${amount}',"pending",'${
+                  x.toLocaleDateString() + " " + x.toLocaleTimeString()
+                }',${0});`;
                 connection.query(query, (err, result) => {
                   if (!err) {
                     res.send("done");
@@ -424,7 +434,9 @@ app.post("/setWingo30secbet", (req, res) => {
           connection.query(q3, (error, response) => {
             if (!err) {
               try {
-                let query = `INSERT INTO userbethistory ( uid,game,timeperiod, period, choice, amount,status) VALUES ('${uid}','${game}' ,'${time}','   ${period}', '${choice}', '${amount}',"pending");`;
+                let query = `INSERT INTO userbethistory ( uid,game,timeperiod, period, choice, amount,status,BetTime,	wlAmount) VALUES ('${uid}','${game}' ,'${time}','   ${period}', '${choice}', '${amount}',"pending",'${
+                  x.toLocaleDateString() + " " + x.toLocaleTimeString()
+                }',${0});`;
                 connection.query(query, (err, result) => {
                   if (!err) {
                     res.send("done");
@@ -445,4 +457,36 @@ app.post("/setWingo30secbet", (req, res) => {
       }
     });
   }
+});
+
+app.post("/wingobethistory1min", (req, res) => {
+  let q = `select * from userbethistory where uid='${req.body.id}'and  game='wingo' and timeperiod='onemin' order by id desc limit 10`;
+  connection.query(q, (err, result) => {
+    if (!err) {
+      res.send(result);
+    } else {
+      res.send("err occured " + err);
+    }
+  });
+});
+
+app.post("/wingobethistory3min", (req, res) => {
+  let q = `select * from userbethistory where uid='${req.body.id}'and  game='wingo' and timeperiod='3min' order by id desc limit 10`;
+  connection.query(q, (err, result) => {
+    if (!err) {
+      res.send(result);
+    } else {
+      res.send("err occured " + err);
+    }
+  });
+});
+app.post("/wingobethistory5min", (req, res) => {
+  let q = `select * from userbethistory where uid='${req.body.id}'and  game='wingo' and timeperiod='5min' order by id desc limit 10`;
+  connection.query(q, (err, result) => {
+    if (!err) {
+      res.send(result);
+    } else {
+      res.send("err occured " + err);
+    }
+  });
 });

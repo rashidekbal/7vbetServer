@@ -156,7 +156,9 @@ function settle(userdata, serverdata) {
         (err, res) => {
           if (!err) {
             connection.query(
-              `update userbethistory set status ='win' where id=${userdata.id}`,
+              `update userbethistory set status ='win', wlAmount=${
+                userdata.amount * 4
+              } where id=${userdata.id}`,
               (err, respp) => {
                 if (!err) {
                 }
@@ -173,7 +175,9 @@ function settle(userdata, serverdata) {
         (err, res) => {
           if (!err) {
             connection.query(
-              `update userbethistory set status ='win' where id=${userdata.id}`,
+              `update userbethistory set status ='win' , wlAmount=${
+                userdata.amount * 4
+              } where id=${userdata.id}`,
               (err, respp) => {
                 if (!err) {
                 }
@@ -200,7 +204,9 @@ function settle(userdata, serverdata) {
         (err, res) => {
           if (!err) {
             connection.query(
-              `update userbethistory set status ='win' where id=${userdata.id}`,
+              `update userbethistory set status ='win', wlAmount=${
+                userdata.amount * 2
+              } where id=${userdata.id}`,
               (err, respp) => {
                 if (!err) {
                 }
@@ -227,7 +233,9 @@ function settle(userdata, serverdata) {
         (err, res) => {
           if (!err) {
             connection.query(
-              `update userbethistory set status ='win' where id=${userdata.id}`,
+              `update userbethistory set wlAmount=${
+                userdata.amount * 2
+              } , status ='win' where id=${userdata.id}`,
               (err, respp) => {
                 if (!err) {
                 }
@@ -254,7 +262,9 @@ function settle(userdata, serverdata) {
         (err, res) => {
           if (!err) {
             connection.query(
-              `update userbethistory set status ='win' where id=${userdata.id}`,
+              `update userbethistory set status ='win', wlAmount=${
+                userdata.amount * 1.5
+              } where id=${userdata.id}`,
               (err, respp) => {
                 if (!err) {
                 }
@@ -271,7 +281,9 @@ function settle(userdata, serverdata) {
         (err, res) => {
           if (!err) {
             connection.query(
-              `update userbethistory set status ='win' where id=${userdata.id}`,
+              `update userbethistory set status ='win' , wlAmount=${
+                userdata.amount * 2
+              } where id=${userdata.id}`,
               (err, respp) => {
                 if (!err) {
                 }
@@ -298,7 +310,9 @@ function settle(userdata, serverdata) {
         (err, res) => {
           if (!err) {
             connection.query(
-              `update userbethistory set status ='win' where id=${userdata.id}`,
+              `update userbethistory set status ='win' , wlAmount=${
+                userdata.amount * 1.5
+              } where id=${userdata.id}`,
               (err, respp) => {
                 if (!err) {
                 }
@@ -315,7 +329,9 @@ function settle(userdata, serverdata) {
         (err, res) => {
           if (!err) {
             connection.query(
-              `update userbethistory set status ='win' where id=${userdata.id}`,
+              `update userbethistory set status ='win', wlAmount=${
+                userdata.amount * 2
+              } where id=${userdata.id}`,
               (err, respp) => {
                 if (!err) {
                 }
@@ -341,7 +357,9 @@ function settle(userdata, serverdata) {
       (err, res) => {
         if (!err) {
           connection.query(
-            `update userbethistory set status ='win' where id=${userdata.id}`,
+            `update userbethistory set status ='win', wlAmount=${
+              userdata.amount * 9
+            } where id=${userdata.id}`,
             (err, respp) => {
               if (!err) {
               }
