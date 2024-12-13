@@ -112,7 +112,7 @@ app.post("/login", (req, res) => {
 
 app.get("/wingoOneMin", (req, res) => {
   connection.query(
-    "select * from wingo1min   order by period desc limit 10",
+    "select * from wingo1min order by period desc limit 10",
 
     (err, response) => {
       if (err) {

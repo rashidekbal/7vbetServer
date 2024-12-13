@@ -127,7 +127,7 @@ function WingoOneMinResult() {
   result = { period, number: `${String(number)}`, size, color };
 
   let insert = `insert into wingo1min values ('${period}','${number}','${size}','${color}')`;
-  connection.query(insert, (err, result) => {
+  connection.query(insert, (err, reeee) => {
     if (err) {
       console.log(err);
     } else {
