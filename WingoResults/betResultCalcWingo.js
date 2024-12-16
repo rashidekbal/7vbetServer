@@ -112,7 +112,7 @@ function settle30secwingo() {
   let day = date.getDate();
   let hour = date.getHours();
   let min = date.getMinutes() + 1;
-  // generate new random int between 0 and 9
+
   let period = `${year}${month}${day}${hour == 0 ? `00` : hour}${
     min == 0 ? `60` : min < 10 ? "0" + min : min
   }${date.getSeconds() > 30 ? 2 : 1}`;

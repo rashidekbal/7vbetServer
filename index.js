@@ -408,7 +408,16 @@ app.post("/setwingo5min", (req, res) => {
 
 app.post("/setWingo30secbet", (req, res) => {
   let uid = req.body.packet.uid;
-  let period = req.body.packet.period;
+  let date = new Date();
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+  let hour = date.getHours();
+  let min = date.getMinutes() + 1;
+  // generate new random int between 0 and 9
+  let period = `${year}${month}${day}${hour == 0 ? `00` : hour}${
+    min == 0 ? `60` : min < 10 ? "0" + min : min
+  }${date.getSeconds() > 30 ? 2 : 1}`;
   let choice = req.body.packet.selection;
   let initialAmount = Number(req.body.packet.amount);
   let amount = initialAmount - initialAmount / 50;
@@ -416,9 +425,9 @@ app.post("/setWingo30secbet", (req, res) => {
   let time = req.body.packet.time;
   let x = new Date();
   let sec = x.getSeconds();
-  if (sec > 55) {
-    res.send("time up for current round");
-  } else if (sec - 30 > -5) {
+  let currentsec = sec > 30 ? Math.abs(sec - 60) : Math.abs(sec - 30);
+
+  if (currentsec <= 5) {
     res.send("time up for current round");
   } else {
     let q = `select balance from userfinances where uid='${uid}'`;
@@ -458,7 +467,16 @@ app.post("/setWingo30secbet", (req, res) => {
     });
   }
 });
-
+app.post("/wingobethistory30sec", (req, res) => {
+  let q = `select * from userbethistory where uid='${req.body.id}'and  game='wingo' and timeperiod='30sec' order by id desc limit 10`;
+  connection.query(q, (err, result) => {
+    if (!err) {
+      res.send(result);
+    } else {
+      res.send("err occured " + err);
+    }
+  });
+});
 app.post("/wingobethistory1min", (req, res) => {
   let q = `select * from userbethistory where uid='${req.body.id}'and  game='wingo' and timeperiod='onemin' order by id desc limit 10`;
   connection.query(q, (err, result) => {

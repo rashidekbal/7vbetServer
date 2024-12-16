@@ -62,6 +62,7 @@ function wingo30secresult() {
   let period = `${year}${month}${day}${hour == 0 ? `00` : hour}${
     min == 0 ? `60` : min < 10 ? "0" + min : min
   }${date.getSeconds() > 30 ? 2 : 1}`;
+
   let number = Math.floor(Math.random() * 10);
   let size;
   let color;
