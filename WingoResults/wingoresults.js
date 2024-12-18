@@ -16,10 +16,6 @@ const wingo = () => {
       WingoOneMinResult();
     }
 
-    if (date.getSeconds() == 58) {
-      settle1MinWingo();
-      settle30secwingo();
-    }
     //for 30 sec game
     if (date.getSeconds() == 25) {
       wingo30secresult();
@@ -27,23 +23,19 @@ const wingo = () => {
     if (date.getSeconds() == 55) {
       wingo30secresult();
     }
-    if (date.getSeconds() == 28) {
-      settle30secwingo();
-    }
+
     //for 3min game
 
     if (date.getMinutes() % 3 == 2) {
       if (date.getSeconds() == 55) {
         wingo3min();
-      } else if (date.getSeconds() == 58) {
-        settle3MinWingo();
       }
     }
+
+    //for five min wingo
     if (date.getMinutes() % 5 == 4) {
       if (date.getSeconds() == 55) {
         wingo5min();
-      } else if (date.getSeconds() == 58) {
-        settle5MinWingo();
       }
     }
   }, 1000);
@@ -68,9 +60,9 @@ function wingo30secresult() {
   let color;
 
   if (number < 5) {
-    size = "small";
+    size = "Small";
   } else {
-    size = "big";
+    size = "Big";
   }
   if (number % 2 == 0) {
     color = "red";
@@ -90,6 +82,7 @@ function wingo30secresult() {
     if (err) {
       console.log(err);
     } else {
+      settle30secwingo();
     }
   });
 }
@@ -110,9 +103,9 @@ function WingoOneMinResult() {
   let color;
 
   if (number < 5) {
-    size = "small";
+    size = "Small";
   } else {
-    size = "big";
+    size = "Big";
   }
   if (number % 2 == 0) {
     color = "red";
@@ -132,6 +125,7 @@ function WingoOneMinResult() {
     if (err) {
       console.log(err);
     } else {
+      settle1MinWingo();
     }
   });
 }
@@ -153,9 +147,9 @@ function wingo3min() {
   let color;
 
   if (number < 5) {
-    size = "small";
+    size = "Small";
   } else {
-    size = "big";
+    size = "Big";
   }
   if (number % 2 == 0) {
     color = "red";
@@ -175,6 +169,7 @@ function wingo3min() {
     if (err) {
       console.log(err);
     } else {
+      settle3MinWingo();
     }
   });
 }
@@ -195,9 +190,9 @@ function wingo5min() {
   let color;
 
   if (number < 5) {
-    size = "small";
+    size = "Small";
   } else {
-    size = "big";
+    size = "Big";
   }
   if (number % 2 == 0) {
     color = "red";
@@ -217,6 +212,7 @@ function wingo5min() {
     if (err) {
       console.log(err);
     } else {
+      settle5MinWingo();
     }
   });
 }

@@ -196,7 +196,7 @@ function settle(userdata, serverdata) {
       );
     }
   } else if (userdata.choice == "Big") {
-    if (serverdata.size == "big") {
+    if (serverdata.size == "Big") {
       connection.query(
         `update userfinances set balance = balance+${
           userdata.amount * 2
@@ -224,8 +224,8 @@ function settle(userdata, serverdata) {
         }
       );
     }
-  } else if (userdata.choice == "small") {
-    if (serverdata.size == "small") {
+  } else if (userdata.choice == "Small") {
+    if (serverdata.size == "Small") {
       connection.query(
         `update userfinances set balance = balance+${
           userdata.amount * 2
