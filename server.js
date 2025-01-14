@@ -239,12 +239,23 @@ app.post("/setWingo1minbet", (req, res) => {
 });
 app.post("/setWingo3minbet", (req, res) => {
   let uid = req.body.packet.uid;
-  let period = req.body.packet.period;
+  let period;
   let choice = req.body.packet.selection;
   let initialAmount = Number(req.body.packet.amount);
   let amount = initialAmount - initialAmount / 50;
   let game = req.body.packet.game;
   let time = req.body.packet.time;
+  let date = new Date();
+             
+              let year = date.getFullYear();
+              let month = date.getMonth() + 1;
+              let day = date.getDate();
+              let hour = date.getHours();
+              let min =
+                date.getMinutes() + Math.abs((date.getMinutes() % 3) - 3);
+               period = `${year}${month}${day}${hour == 0 ? `00` : hour}${
+                min == 0 ? `60` : min < 10 ? "0" + min : min
+              }`;
   let x = new Date();
   let sec = x.getSeconds();
   if (x.getMinutes() % 3 == 2) {
@@ -327,12 +338,23 @@ app.post("/setWingo3minbet", (req, res) => {
 });
 app.post("/setwingo5min", (req, res) => {
   let uid = req.body.packet.uid;
-  let period = req.body.packet.period;
+  let period ;
   let choice = req.body.packet.selection;
   let initialAmount = Number(req.body.packet.amount);
   let amount = initialAmount - initialAmount / 50;
   let game = req.body.packet.game;
   let time = req.body.packet.time;
+  let date=new Date();
+   let year = date.getFullYear();
+              let month = date.getMonth() + 1;
+              let day = date.getDate();
+              let hour = date.getHours();
+              let min =
+                date.getMinutes()+
+                Math.abs((date.getMinutes() % 5) - 5);
+  period = `${year}${month}${day}${
+                hour == 0 ? `00` : hour
+              }${min}`;
   let x = new Date();
   let sec = x.getSeconds();
   if (x.getMinutes() % 5 == 4) {
