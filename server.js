@@ -181,13 +181,21 @@ app.post("/userfinances", (req, res) => {
 
 app.post("/setWingo1minbet", (req, res) => {
   let uid = req.body.packet.uid;
-  let period = req.body.packet.period;
+  let period;
   let choice = req.body.packet.selection;
   let initialAmount = Number(req.body.packet.amount);
   let amount = initialAmount - initialAmount / 50;
   let game = req.body.packet.game;
   let time = req.body.packet.time;
   let x = new Date();
+  let date = new Date();
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+  let hour = date.getHours();
+  let min = date.getMinutes() + 1;
+  period = `${year}${month}${day}${hour == 0 ? `00` : hour}${
+                  min == 0 ? `60` : min < 10 ? "0" + min : min}`;
   let sec = x.getSeconds();
   if (sec > 55) {
     res.send("time up for current round");
