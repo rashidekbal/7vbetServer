@@ -79,7 +79,7 @@ function wingo30secresult() {
 
   let insert = `insert into wingo30sec(period, number, size, color) values (?,?,?,?)`;
 let values=[period, number, size, color]
-  connection.query(insert, (err, result) => {
+  connection.query(insert,values, (err, result) => {
     if (err) {
       console.log(err);
     } else {
