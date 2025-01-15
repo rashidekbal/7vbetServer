@@ -112,7 +112,7 @@ app.post("/login", (req, res) => {
 
 app.get("/wingoOneMin", (req, res) => {
   connection.query(
-    "select * from wingo1min order by period desc limit 10",
+    "select * from wingo1min order by id desc limit 10",
 
     (err, response) => {
       if (err) {
@@ -125,7 +125,7 @@ app.get("/wingoOneMin", (req, res) => {
 });
 app.get("/wingo30sec", (req, res) => {
   connection.query(
-    "select * from wingo30sec   order by period desc limit 10",
+    "select * from wingo30sec   order by id desc limit 10",
 
     (err, response) => {
       if (err) {
@@ -138,7 +138,7 @@ app.get("/wingo30sec", (req, res) => {
 });
 app.get("/wingo3min", (req, res) => {
   connection.query(
-    "select * from wingo3min   order by period desc limit 10",
+    "select * from wingo3min   order by id desc limit 10",
 
     (err, response) => {
       if (err) {
@@ -151,7 +151,7 @@ app.get("/wingo3min", (req, res) => {
 });
 app.get("/wingo5min", (req, res) => {
   connection.query(
-    "select * from wingo5min   order by period desc limit 10",
+    "select * from wingo5min   order by id desc limit 10",
 
     (err, response) => {
       if (err) {
