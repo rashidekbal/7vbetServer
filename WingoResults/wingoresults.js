@@ -120,9 +120,10 @@ function WingoOneMinResult() {
   }
 
   result = { period, number: `${String(number)}`, size, color };
+const insert = `INSERT INTO wingo1min (period, number, size, color) VALUES (?, ?, ?, ?)`;
+const values = [period, number, size, color];
 
-  let insert = `insert into wingo1min values ('${period}','${number}','${size}','${color}')`;
-  connection.query(insert, (err, reeee) => {
+  connection.query(insert,values, (err, reeee) => {
     if (err) {
       console.log(err);
     } else {
@@ -165,8 +166,10 @@ function wingo3min() {
 
   result = { period, number: `${String(number)}`, size, color };
 
-  let insert = `insert into wingo3min values ('${period}','${number}','${size}','${color}')`;
-  connection.query(insert, (err, result) => {
+  const insert = `INSERT INTO wingo3min (period, number, size, color) VALUES (?, ?, ?, ?)`;
+const values = [period, number, size, color];
+
+  connection.query(insert,values, (err, result) => {
     if (err) {
       console.log(err);
     } else {
@@ -208,8 +211,10 @@ function wingo5min() {
 
   result = { period, number: `${String(number)}`, size, color };
 
-  let insert = `insert into wingo5min values ('${period}','${number}','${size}','${color}')`;
-  connection.query(insert, (err, result) => {
+  const insert = `INSERT INTO wingo3min (period, number, size, color) VALUES (?, ?, ?, ?)`;
+const values = [period, number, size, color];
+
+  connection.query(insert, values,(err, result) => {
     if (err) {
       console.log(err);
     } else {
