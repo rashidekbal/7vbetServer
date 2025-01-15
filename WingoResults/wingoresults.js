@@ -211,7 +211,7 @@ function wingo5min() {
 
   result = { period, number: `${String(number)}`, size, color };
 
-  const insert = `INSERT INTO wingo3min (period, number, size, color) VALUES (?, ?, ?, ?)`;
+  const insert = `INSERT INTO wingo5min (period, number, size, color) VALUES (?, ?, ?, ?)`;
 const values = [period, number, size, color];
 
   connection.query(insert, values,(err, result) => {
