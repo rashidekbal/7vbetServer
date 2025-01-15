@@ -77,7 +77,8 @@ function wingo30secresult() {
 
   result = { period, number: `${String(number)}`, size, color };
 
-  let insert = `insert into wingo30sec values ('${period}','${number}','${size}','${color}')`;
+  let insert = `insert into wingo30sec(period, number, size, color) values (?,?,?,?)`;
+let values=[period, number, size, color]
   connection.query(insert, (err, result) => {
     if (err) {
       console.log(err);
