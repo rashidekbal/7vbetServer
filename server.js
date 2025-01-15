@@ -353,7 +353,7 @@ app.post("/setwingo5min", (req, res) => {
                 date.getMinutes()+
                 Math.abs((date.getMinutes() % 5) - 5);
     period = `${year}${month}${day}${hour == 0 ? `00` : hour}${
-    min == 0 ? `60` : min < 10 ? "0" + min : min
+    min == 0 ? `60` : min < 10 ? "0" + min : min}`;
   let x = new Date();
   let sec = x.getSeconds();
   if (x.getMinutes() % 5 == 4) {
