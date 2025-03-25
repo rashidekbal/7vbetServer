@@ -4,7 +4,7 @@ import cors from "cors";
 import { Server } from "socket.io";
 import { connection } from "./db/dbConnect.js";
 import { wingo } from "./WingoResults/wingoresults.js";
-import { settle1MinWingo } from "./WingoResults/betResultCalcWingo.js";
+import jwt from "jsonwebtoken";
 import http from "http";
 
 const app = express();
@@ -109,8 +109,46 @@ app.post("/login", (req, res) => {
     }
   });
 });
+app.post("/loginV2", (req, res) => {
+  let response;
+  let phone = req.body.phone;
+  let password = req.body.password;
+  const query = `select * from userdetails where phone =${phone}`;
+  connection.query(query, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.json({ msg: "err" });
+    } else {
+      if (result == 0) {
+        res.json({ msg: "null" });
+      } else {
+        response = result[0];
+        if (response.pass !== password) {
+          res.send({ msg: "passerr" });
+        } else {
+          const id = { uid: result[0].uid };
+          const acess_token = jwt.sign(id, process.env.SECRET_KEY);
+          res.send({ msg: "sucess", token: acess_token });
+        }
+      }
+    }
+  });
+});
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.sendStatus(401);
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.uid = user.uid;
+    next();
+  });
+}
 
-app.get("/wingoOneMin", (req, res) => {
+app.get("/test", authenticateToken, (req, res) => {
+  res.send(req.user);
+});
+app.get("/wingoOneMin", authenticateToken, (req, res) => {
   connection.query(
     "select * from wingo1min order by id desc limit 10",
 
@@ -123,7 +161,7 @@ app.get("/wingoOneMin", (req, res) => {
     }
   );
 });
-app.get("/wingo30sec", (req, res) => {
+app.get("/wingo30sec", authenticateToken, (req, res) => {
   connection.query(
     "select * from wingo30sec   order by id desc limit 10",
 
@@ -136,7 +174,7 @@ app.get("/wingo30sec", (req, res) => {
     }
   );
 });
-app.get("/wingo3min", (req, res) => {
+app.get("/wingo3min", authenticateToken, (req, res) => {
   connection.query(
     "select * from wingo3min   order by id desc limit 10",
 
@@ -149,7 +187,7 @@ app.get("/wingo3min", (req, res) => {
     }
   );
 });
-app.get("/wingo5min", (req, res) => {
+app.get("/wingo5min", authenticateToken, (req, res) => {
   connection.query(
     "select * from wingo5min   order by id desc limit 10",
 
@@ -163,8 +201,8 @@ app.get("/wingo5min", (req, res) => {
   );
 });
 
-app.post("/userfinances", (req, res) => {
-  let query = `select * from userfinances where uid=${req.body.uid}`;
+app.get("/userfinances", authenticateToken, (req, res) => {
+  let query = `select * from userfinances where uid=${req.uid}`;
 
   connection.query(query, (err, result) => {
     if (!err) {
@@ -179,8 +217,8 @@ app.post("/userfinances", (req, res) => {
   });
 });
 
-app.post("/setWingo1minbet", (req, res) => {
-  let uid = req.body.packet.uid;
+app.post("/setWingo1minbet", authenticateToken, (req, res) => {
+  let uid = req.uid;
   let period;
   let choice = req.body.packet.selection;
   let initialAmount = Number(req.body.packet.amount);
@@ -195,7 +233,8 @@ app.post("/setWingo1minbet", (req, res) => {
   let hour = date.getHours();
   let min = date.getMinutes() + 1;
   period = `${year}${month}${day}${hour == 0 ? `00` : hour}${
-                  min == 0 ? `60` : min < 10 ? "0" + min : min}`;
+    min == 0 ? `60` : min < 10 ? "0" + min : min
+  }`;
   let sec = x.getSeconds();
   if (sec > 55) {
     res.send("time up for current round");
@@ -237,8 +276,8 @@ app.post("/setWingo1minbet", (req, res) => {
     });
   }
 });
-app.post("/setWingo3minbet", (req, res) => {
-  let uid = req.body.packet.uid;
+app.post("/setWingo3minbet", authenticateToken, (req, res) => {
+  let uid = req.uid;
   let period;
   let choice = req.body.packet.selection;
   let initialAmount = Number(req.body.packet.amount);
@@ -246,16 +285,15 @@ app.post("/setWingo3minbet", (req, res) => {
   let game = req.body.packet.game;
   let time = req.body.packet.time;
   let date = new Date();
-             
-              let year = date.getFullYear();
-              let month = date.getMonth() + 1;
-              let day = date.getDate();
-              let hour = date.getHours();
-              let min =
-                date.getMinutes() + Math.abs((date.getMinutes() % 3) - 3);
-               period = `${year}${month}${day}${hour == 0 ? `00` : hour}${
-                min == 0 ? `60` : min < 10 ? "0" + min : min
-              }`;
+
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+  let hour = date.getHours();
+  let min = date.getMinutes() + Math.abs((date.getMinutes() % 3) - 3);
+  period = `${year}${month}${day}${hour == 0 ? `00` : hour}${
+    min == 0 ? `60` : min < 10 ? "0" + min : min
+  }`;
   let x = new Date();
   let sec = x.getSeconds();
   if (x.getMinutes() % 3 == 2) {
@@ -336,24 +374,23 @@ app.post("/setWingo3minbet", (req, res) => {
     });
   }
 });
-app.post("/setwingo5min", (req, res) => {
-  let uid = req.body.packet.uid;
-  let period ;
+app.post("/setwingo5min", authenticateToken, (req, res) => {
+  let uid = req.uid;
+  let period;
   let choice = req.body.packet.selection;
   let initialAmount = Number(req.body.packet.amount);
   let amount = initialAmount - initialAmount / 50;
   let game = req.body.packet.game;
   let time = req.body.packet.time;
-  let date=new Date();
-   let year = date.getFullYear();
-              let month = date.getMonth() + 1;
-              let day = date.getDate();
-              let hour = date.getHours();
-              let min =
-                date.getMinutes()+
-                Math.abs((date.getMinutes() % 5) - 5);
-    period = `${year}${month}${day}${hour == 0 ? `00` : hour}${
-    min == 0 ? `60` : min < 10 ? "0" + min : min}`;
+  let date = new Date();
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+  let hour = date.getHours();
+  let min = date.getMinutes() + Math.abs((date.getMinutes() % 5) - 5);
+  period = `${year}${month}${day}${hour == 0 ? `00` : hour}${
+    min == 0 ? `60` : min < 10 ? "0" + min : min
+  }`;
   let x = new Date();
   let sec = x.getSeconds();
   if (x.getMinutes() % 5 == 4) {
@@ -435,8 +472,8 @@ app.post("/setwingo5min", (req, res) => {
   }
 });
 
-app.post("/setWingo30secbet", (req, res) => {
-  let uid = req.body.packet.uid;
+app.post("/setWingo30secbet", authenticateToken, (req, res) => {
+  let uid = req.uid;
   let date = new Date();
   let year = date.getFullYear();
   let month = date.getMonth() + 1;
@@ -496,8 +533,8 @@ app.post("/setWingo30secbet", (req, res) => {
     });
   }
 });
-app.post("/wingobethistory30sec", (req, res) => {
-  let q = `select * from userbethistory where uid='${req.body.id}'and  game='wingo' and timeperiod='30sec' order by id desc limit 10`;
+app.get("/wingobethistory30sec", authenticateToken, (req, res) => {
+  let q = `select * from userbethistory where uid='${req.uid}'and  game='wingo' and timeperiod='30sec' order by id desc limit 10`;
   connection.query(q, (err, result) => {
     if (!err) {
       res.send(result);
@@ -506,8 +543,8 @@ app.post("/wingobethistory30sec", (req, res) => {
     }
   });
 });
-app.post("/wingobethistory1min", (req, res) => {
-  let q = `select * from userbethistory where uid='${req.body.id}'and  game='wingo' and timeperiod='onemin' order by id desc limit 10`;
+app.get("/wingobethistory1min", authenticateToken, (req, res) => {
+  let q = `select * from userbethistory where uid='${req.uid}'and  game='wingo' and timeperiod='onemin' order by id desc limit 10`;
   connection.query(q, (err, result) => {
     if (!err) {
       res.send(result);
@@ -517,8 +554,8 @@ app.post("/wingobethistory1min", (req, res) => {
   });
 });
 
-app.post("/wingobethistory3min", (req, res) => {
-  let q = `select * from userbethistory where uid='${req.body.id}'and  game='wingo' and timeperiod='3min' order by id desc limit 10`;
+app.get("/wingobethistory3min", authenticateToken, (req, res) => {
+  let q = `select * from userbethistory where uid='${req.uid}'and  game='wingo' and timeperiod='3min' order by id desc limit 10`;
   connection.query(q, (err, result) => {
     if (!err) {
       res.send(result);
@@ -527,8 +564,8 @@ app.post("/wingobethistory3min", (req, res) => {
     }
   });
 });
-app.post("/wingobethistory5min", (req, res) => {
-  let q = `select * from userbethistory where uid='${req.body.id}'and  game='wingo' and timeperiod='5min' order by id desc limit 10`;
+app.get("/wingobethistory5min", authenticateToken, (req, res) => {
+  let q = `select * from userbethistory where uid='${req.uid}'and  game='wingo' and timeperiod='5min' order by id desc limit 10`;
   connection.query(q, (err, result) => {
     if (!err) {
       res.send(result);
