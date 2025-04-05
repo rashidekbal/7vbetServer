@@ -6,10 +6,11 @@ import { connection } from "./db/dbConnect.js";
 import { wingo } from "./WingoResults/wingoresults.js";
 import jwt from "jsonwebtoken";
 import http from "http";
+import start_new_game from "./utils/Aviator.js";
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
+export const io = new Server(server, {
   cors: { origin: "*" },
   transports: ["websocket", "polling"],
 });
@@ -25,12 +26,16 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {});
 });
+
 connection.connect((err) => {
   if (err) {
     console.log(`Error connecting to database: ${err}`);
   } else {
     console.log("Finally connected to database");
     wingo();
+    setTimeout(() => {
+      start_new_game(io);
+    }, 1000);
 
     const PORT = process.env.PORT || 8000;
     server.listen(PORT, () => {
