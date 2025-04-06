@@ -36,7 +36,6 @@ function start_new_game(socket) {
     }
     if (currentSec < 10) {
       currentSec++;
-      console.log(Math.abs(currentSec - 10));
       socket.emit("Aviator_halt", {
         remaining_time: Math.abs(currentSec - 10),
       });
