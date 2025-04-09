@@ -4,10 +4,10 @@ import cors from "cors";
 import { Server } from "socket.io";
 import { connection } from "./db/dbConnect.js";
 import { wingo } from "./WingoResults/wingoresults.js";
-import jwt from "jsonwebtoken";
 import http from "http";
 import start_new_game from "./utils/Aviator.js";
-
+import auth from "./Routes/Auth.js";
+import authenticateToken from "./utils/Authorization.js";
 const app = express();
 const server = http.createServer(app);
 export const io = new Server(server, {
@@ -43,115 +43,12 @@ connection.connect((err) => {
     });
   }
 });
-
 app.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"] }));
 app.use(express.json());
-
+app.use("/auth", auth);
+app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.send("you got it right");
-});
-app.post("/register", (req, res) => {
-  const phone = req.body.phone;
-  const password = req.body.password;
-  const referredBy = req.body.refferedBy;
-  const date = new Date();
-  let uid = String(phone).slice(2);
-
-  let query = `select * from userdetails where uid=${phone} limit 1`;
-  3;
-  let insert = `insert into userdetails values(${uid},'${phone}','${password}','${referredBy}','${date.toLocaleDateString()}','${date.toLocaleTimeString()}')`;
-  connection.query(query, (erry, result) => {
-    if (erry) {
-      console.log(erry);
-      res.send("err");
-    } else {
-      if (result == 0) {
-        try {
-          connection.query(insert, (err, result) => {
-            if (err) {
-              res.send(err);
-            } else {
-              let q1 = `insert into userfinances values(${uid},${100.0},${0},${0})`;
-              connection.query(q1, (err, result) => {
-                if (!err) {
-                  res.send("ok");
-                } else {
-                  res.send("ok");
-                }
-              });
-            }
-          });
-        } catch (error) {
-          console.log(err);
-        }
-      } else {
-        res.send("user_Exists");
-      }
-    }
-  });
-});
-
-app.post("/login", (req, res) => {
-  let response;
-  let phone = req.body.phone;
-  let password = req.body.password;
-  const query = `select * from userdetails where phone =${phone}`;
-  connection.query(query, (err, result) => {
-    if (err) {
-      console.log(err);
-      res.send("err");
-    } else {
-      if (result == 0) {
-        res.send("null");
-      } else {
-        response = result[0];
-        if (response.pass !== password) {
-          res.send("passerr");
-        } else {
-          res.send("sucess");
-        }
-      }
-    }
-  });
-});
-app.post("/loginV2", (req, res) => {
-  let response;
-  let phone = req.body.phone;
-  let password = req.body.password;
-  const query = `select * from userdetails where phone =${phone}`;
-  connection.query(query, (err, result) => {
-    if (err) {
-      console.log(err);
-      res.json({ msg: "err" });
-    } else {
-      if (result == 0) {
-        res.json({ msg: "null" });
-      } else {
-        response = result[0];
-        if (response.pass !== password) {
-          res.send({ msg: "passerr" });
-        } else {
-          const id = { uid: result[0].uid };
-          const acess_token = jwt.sign(id, process.env.SECRET_KEY);
-          res.send({ msg: "sucess", token: acess_token });
-        }
-      }
-    }
-  });
-});
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  if (token == null) return res.sendStatus(401);
-  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.uid = user.uid;
-    next();
-  });
-}
-
-app.get("/test", authenticateToken, (req, res) => {
-  res.send(req.user);
 });
 app.get("/wingoOneMin", authenticateToken, (req, res) => {
   connection.query(
