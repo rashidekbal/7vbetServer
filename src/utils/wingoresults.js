@@ -13,6 +13,7 @@ const wingo = () => {
 
     //for one minute games
     if (date.getSeconds() == 55) {
+
       WingoOneMinResult();
     }
 

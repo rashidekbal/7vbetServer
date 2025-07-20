@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
-function authenticateToken(req, res, next) {
+function verifyToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null) return res.sendStatus(401);
@@ -10,4 +10,4 @@ function authenticateToken(req, res, next) {
     next();
   });
 }
-export default authenticateToken;
+export default verifyToken;

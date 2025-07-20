@@ -1,0 +1,3 @@
+const INSUFFICIENT_BALANCE = 1;
+const TIME_UP = 2;
+export { INSUFFICIENT_BALANCE, TIME_UP };

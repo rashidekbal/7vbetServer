@@ -48,7 +48,6 @@ function fly_the_bird(result, socket) {
 }
 function start_new_game(socket) {
   let result = generateFlight(4);
-  console.log("upcoming result", result);
   period = generator_period();
 
   let currentSec = 0;
